@@ -1,0 +1,18 @@
+{
+  "name": "scrum",
+  "version": "1.0.0",
+  "description": "Projeto para Laboratório de Engenharia de Software ADS Franca - SP",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
