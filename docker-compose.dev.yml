@@ -1,8 +1,23 @@
 version: '3.8'
 
+name: Scrum-app
 services:
-  API:
-    container_name: scrum-server
+  client:
+    image: ${DOCKER_REGISTRY-}cliente-scrum-app
+    container_name: scrum-client
+    build: 
+      context: ./client
+      dockerfile: .Dockerfile
+      target: develop-stage
+    volumes:
+      - ./client:/src
+    ports:
+      - 8080:8080
+    command:
+      quasar dev -m spa
+
+  api:
+    container_name: scrum-api
     build: ./api
     command: npm run server
     image: node:16-alpine
@@ -10,9 +25,9 @@ services:
     ports: 
       - 3000:3000
     volumes:
-      - .:/app
+      - ./api:/app
 
-  postgres:
+  postgres_db:
       container_name: scrum-database
       image: postgres:14
       environment:
