@@ -28,7 +28,7 @@ router.put('/:uuid', async (req, res) => {
 })
 
 router.delete('/:uuid', async (req, res) => {
-  await remove(req)
+  remove(req)
 
   res.status(200).json({ message: 'The item was sucessfully deleted' })
 })

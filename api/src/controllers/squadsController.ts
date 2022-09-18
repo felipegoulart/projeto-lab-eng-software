@@ -1,9 +1,14 @@
-// import { formatTimestamp } from 'helpers/date'
+import { 
+  list,
+  create as createSquad,
+  show as showSquad,
+  update as updateSquad,
+  remove as removeSquad
+} from 'repositories/squadsRepository'
 import { Request } from 'express'
-import connection from 'infra/database/connection/pgPromiseConnection.js'
 
 async function index () {
-  const results = await connection.query('SELECT * FROM squads')
+  const results = await list()
   return results
 }
 
@@ -12,13 +17,19 @@ async function create (req: Request) {
 
   if (!name) throw new Error('Name is required')
 
-  const result = await connection.query('INSERT INTO squads (name) VALUES ($1) RETURNING *', [name])
+  const result = await createSquad(name)
 
   return result
 }
 
 async function show (req: Request) {
-  const result = await connection.query('SELECT * FROM squads WHERE uuid = $1', [req.params.uuid])
+  const { uuid } = req.params
+
+  if (!uuid) {
+    throw new Error('UUID is required')
+  }
+
+  const result = await showSquad(uuid)
 
   return result
 }
@@ -31,23 +42,17 @@ async function update (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  const result = await connection.query('UPDATE squads SET name = $1, updated_at = CURRENT_TIMESTAMP WHERE uuid = $2 RETURNING *',
-    [body.name, uuid]
-  )
+  const result = await updateSquad(uuid, body.name)
 
   return result
 }
 
-async function remove (req: Request) {
+function remove (req: Request) {
   const { uuid } = req.params
 
   if (!uuid) throw new Error('UUID is required')
 
-  try {
-    await connection.query('DELETE FROM squads WHERE uuid = $1', [uuid])
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  removeSquad(uuid)
 }
 
 export {

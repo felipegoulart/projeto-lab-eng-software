@@ -16,8 +16,10 @@
       "controllers": ["controllers"],
       "helpers": ["helpers"],
       "infra": ["infra"],
+      "database/*": ["infra/database/*"],
       "routes": ["routes"],
       "services": ["services"],
+      "repositories": ["repositories"],
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
 
     /* JavaScript Support */
