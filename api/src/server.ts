@@ -1,10 +1,13 @@
 import express from 'express'
+import cors from 'cors'
+
 import boardsRoutes from 'routes/boardsRoutes'
 import statusRoutes from 'routes/statusRoutes'
 import tasksRoutes from 'routes/tasksRoutes'
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 /* Rotas */
