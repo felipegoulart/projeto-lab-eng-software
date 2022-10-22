@@ -1,0 +1,40 @@
+DROP TABLE
+  IF EXISTS tasks;
+  
+DROP TABLE
+  IF EXISTS status;
+
+DROP TABLE
+  IF EXISTS boards;
+
+
+CREATE TABLE
+  boards (
+    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
+    name text NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  );
+  
+ 
+CREATE TABLE
+  status (
+    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
+    name TEXT NOT NULL,
+    board_uuid UUID NOT NULL REFERENCES boards ON DELETE NO ACTION ON UPDATE CASCADE,
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    UNIQUE(name, board_uuid)
+  );
+
+CREATE TABLE
+  tasks (
+    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
+    title TEXT NOT NULL,
+    description TEXT,
+    time_estimate BIGINT CHECK (time_estimate > 0),
+    status_uuid UUID NOT NULL REFERENCES status ON DELETE RESTRICT ON UPDATE CASCADE,
+    board_uuid UUID NOT NULL REFERENCES boards ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  );

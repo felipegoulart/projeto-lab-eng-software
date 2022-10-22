@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run start:api && npm run start:client",
-    "start:api": "docker compose -f ./docker-compose.dev.yml up api postgres_db -d",
+    "start:api": "docker compose -f ./docker-compose.dev.yml --env-file ./api/.env up api postgres_db -d",
     "start:client": "docker compose -f ./docker-compose.dev.yml up client -d"
   },
   "repository": {
