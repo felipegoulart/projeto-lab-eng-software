@@ -1,10 +1,9 @@
 import { 
   list,
-  create as createSquad,
-  show as showSquad,
-  update as updateSquad,
-  remove as removeSquad
-} from 'repositories/squadsRepository'
+  create as createStatus,
+  update as updateStatus,
+  remove as removeStatus
+} from 'repositories/statusRepository'
 import { Request } from 'express'
 
 async function index () {
@@ -13,23 +12,13 @@ async function index () {
 }
 
 async function create (req: Request) {
-  const { name } = req.body
+  const { name, boardUUID } = req.body
 
   if (!name) throw new Error('Name is required')
 
-  const result = await createSquad(name)
+  if (!boardUUID) throw new Error('Board is required')
 
-  return result
-}
-
-async function show (req: Request) {
-  const { uuid } = req.params
-
-  if (!uuid) {
-    throw new Error('UUID is required')
-  }
-
-  const result = await showSquad(uuid)
+  const result = await createStatus(name, boardUUID)
 
   return result
 }
@@ -42,7 +31,7 @@ async function update (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  const result = await updateSquad(uuid, body.name)
+  const result = await updateStatus(uuid, body.name)
 
   return result
 }
@@ -52,13 +41,12 @@ function remove (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  removeSquad(uuid)
+  removeStatus(uuid)
 }
 
 export {
   index,
   create,
-  show,
   update,
   remove
 }

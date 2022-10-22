@@ -1,11 +1,15 @@
 import express from 'express'
-import squadsRouter from './routes/squadsRoutes'
+import boardsRoutes from 'routes/boardsRoutes'
+import statusRoutes from 'routes/statusRoutes'
+import tasksRoutes from 'routes/tasksRoutes'
 
 const app = express()
 
 app.use(express.json())
 
 /* Rotas */
-app.use('/squads', squadsRouter)
+app.use('/boards', boardsRoutes)
+app.use('/status', statusRoutes)
+app.use('/tasks', tasksRoutes)
 
 export default app

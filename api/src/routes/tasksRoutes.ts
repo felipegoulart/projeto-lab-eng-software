@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { index, create, show, update, remove } from 'controllers/squadsController'
+import { index, create, update, remove } from 'controllers/tasksController'
 
 const router = Router()
 
@@ -13,12 +13,6 @@ router.post('', async (req, res) => {
   const result = await create(req)
 
   res.json(result)
-})
-
-router.get('/:uuid', async (req, res) => {
-  const result = await show(req)
-
-  res.json({ result })
 })
 
 router.put('/:uuid', async (req, res) => {
