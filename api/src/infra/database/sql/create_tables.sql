@@ -1,61 +1,30 @@
 DROP TABLE
-  IF EXISTS status_boards;
-
-DROP TABLE
-  IF EXISTS tasks_users;
-
-DROP TABLE
   IF EXISTS tasks;
-
-DROP TABLE
-  IF EXISTS boards;
-
+  
 DROP TABLE
   IF EXISTS status;
 
 DROP TABLE
-  IF EXISTS users;
+  IF EXISTS boards;
 
-DROP TABLE
-  IF EXISTS squads;
-
-CREATE TABLE
-  squads (
-    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
-    name TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    UNIQUE (name)
-  );
-
-CREATE TABLE
-  users (
-    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
-    full_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    photo TEXT,
-    password TEXT,
-    squad_uuid UUID REFERENCES squads ON DELETE
-    SET
-      NULL ON UPDATE CASCADE,
-      created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-      updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
-  );
-
-CREATE TABLE
-  status (
-    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
-    name TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
-  );
 
 CREATE TABLE
   boards (
     uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
-    name text NOT NULL,
+    name text NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
     updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  );
+  
+ 
+CREATE TABLE
+  status (
+    uuid UUID NOT NULL UNIQUE PRIMARY KEY DEFAULT (gen_random_uuid()),
+    name TEXT NOT NULL,
+    board_uuid UUID NOT NULL REFERENCES boards ON DELETE NO ACTION ON UPDATE CASCADE,
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+    UNIQUE(name, board_uuid)
   );
 
 CREATE TABLE
@@ -64,24 +33,8 @@ CREATE TABLE
     title TEXT NOT NULL,
     description TEXT,
     time_estimate BIGINT CHECK (time_estimate > 0),
-    status_uuid UUID REFERENCES status ON DELETE RESTRICT ON UPDATE CASCADE,
-    board_uuid UUID REFERENCES boards ON DELETE CASCADE ON UPDATE CASCADE,
-    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
-  );
-
-CREATE TABLE
-  tasks_users (
-    task_uuid UUID REFERENCES tasks ON DELETE CASCADE ON UPDATE CASCADE,
-    user_uuid UUID REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (task_uuid, user_uuid)
-  );
-
-CREATE TABLE
-  status_boards (
-    status_uuid UUID NOT NULL REFERENCES status ON DELETE CASCADE ON UPDATE CASCADE,
+    status_uuid UUID NOT NULL REFERENCES status ON DELETE RESTRICT ON UPDATE CASCADE,
     board_uuid UUID NOT NULL REFERENCES boards ON DELETE CASCADE ON UPDATE CASCADE,
     created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-    UNIQUE (status_uuid, board_uuid)
+    updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
   );
