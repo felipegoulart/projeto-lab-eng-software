@@ -22,6 +22,7 @@ interface Props {
   meta: Meta;
   active: boolean;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   todos: () => []
 })
