@@ -12,6 +12,10 @@
 
     <q-drawer side="left" v-model="leftDrawerOpen" behavior="desktop" :width="200">
       <q-list class="full-width column">
+        <q-item to="/boards">
+          inicio
+        </q-item>
+
         <q-item
           v-for="(item, index) in boardsStore.boards"
           active-class="q-router-link--active"

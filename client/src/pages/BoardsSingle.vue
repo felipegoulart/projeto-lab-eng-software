@@ -14,10 +14,10 @@
               <q-card-section>
                 {{tasks.title}}
               </q-card-section>
-<!--
+
               <q-card-section>
                 {{ tasks.description}}
-              </q-card-section> -->
+              </q-card-section>
             </q-card>
           </q-scroll-area>
         </section>
@@ -27,18 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBoardsStore } from 'stores/boards'
 
 const boardsStore = useBoardsStore()
-const board = ref();
-
-(async () => { board.value = await boardsStore.getSingleBoard(boardsStore.currentBoardUUID) })()
-
 const route = useRoute()
-watch(() => route.path, async () => {
-  if (route.name === 'BoardsSingle') {
+const board = ref()
+
+onMounted(async () => {
+  board.value = await boardsStore.getSingleBoard(route.params?.uuid as string)
+})
+
+watch(() => route.params, async () => {
+  if (route.params?.uuid) {
     board.value = await boardsStore.getSingleBoard(boardsStore.currentBoardUUID)
   }
 })

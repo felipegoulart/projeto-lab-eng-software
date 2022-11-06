@@ -5,7 +5,7 @@ function list () {
 }
 
 function listTasksByBoard (boardUUID: string) {
-  return database.query('SELECT uuid, title FROM tasks WHERE board_uuid = $1', [boardUUID])
+  return database.query('SELECT * FROM tasks WHERE board_uuid = $1', [boardUUID])
 }
 
 function create (name: string, description: string, boardUUID: string, statusUUID: string)  {
