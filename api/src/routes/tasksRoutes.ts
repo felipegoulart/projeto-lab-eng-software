@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { index, create, update, remove } from 'controllers/tasksController'
+import { index, create, update, remove, updateStatus } from 'controllers/tasksController'
 
 const router = Router()
 
@@ -17,6 +17,12 @@ router.post('', async (req, res) => {
 
 router.put('/:uuid', async (req, res) => {
   const result = await update(req)
+
+  res.json(result)
+})
+
+router.put('/update-status/:uuid', async (req, res) => {
+  const result = await updateStatus(req)
 
   res.json(result)
 })

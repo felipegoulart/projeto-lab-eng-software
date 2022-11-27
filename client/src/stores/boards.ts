@@ -26,6 +26,23 @@ export const useBoardsStore = defineStore('boards', {
 
     setCurrentBoardUUID (uuid: string|string[]) {
       this.currentBoardUUID = Array.isArray(uuid) ? uuid[0] : uuid
+    },
+
+    async createBoard (name: string): Promise<void> {
+      await api.post('boards', { name })
+    },
+
+    async createStatus (name: string, boardUUID: string): Promise<void> {
+      await api.post('status', { name, boardUUID })
+    },
+
+    async createTask (title: string, description: string, statusUUID: string, boardUUID: string): Promise<void> {
+      await api.post('tasks', { title, description, statusUUID, boardUUID })
+    },
+
+    async updateTaskStatus (taskUUID: string, statusUUID: string): Promise<void> {
+      await api.put(`tasks/update-status/${taskUUID}`, { statusUUID })
     }
+
   }
 })

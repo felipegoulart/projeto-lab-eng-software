@@ -20,6 +20,14 @@ function update (uuid: string, title: string) {
     )
 }
 
+function updateStatus (uuid: string, statusUUID: string) {
+  return database
+    .query(
+      'UPDATE tasks SET status_uuid = $1, updated_at = CURRENT_TIMESTAMP WHERE uuid = $2 RETURNING *',
+      [statusUUID, uuid]
+    )
+}
+
 function remove (uuid: string) {
   database.query('DELETE FROM tasks WHERE uuid = $1', [uuid])
 }
@@ -29,5 +37,6 @@ export {
   listTasksByBoard,
   create,
   update,
+  updateStatus,
   remove
 }
