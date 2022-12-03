@@ -33,7 +33,7 @@ async function update (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  const result = await updateTask(uuid, body.name)
+  const result = await updateTask({uuid, ...body})
 
   return result
 }

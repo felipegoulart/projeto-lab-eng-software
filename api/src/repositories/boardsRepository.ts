@@ -1,6 +1,7 @@
 import database from 'database/connection/pgPromiseConnection'
+import IStatus from 'model/StatusModel'
 import { create as createStatus, listStatusByBoard } from 'repositories/statusRepository'
-import { listTasksByBoard } from 'repositories/tasksRepository'
+import { listTasksByStatus } from 'repositories/tasksRepository'
 
 async function list () {
   try {
@@ -46,11 +47,18 @@ async function show (uuid: string) {
       [uuid]
     )
   
-    const status = await listStatusByBoard(uuid)
-    const tasks = await listTasksByBoard(uuid)
+    const statusData = await listStatusByBoard(uuid)
+    const statusList: IStatus[] = []
+
+    for (const status of statusData) {
+      const tasks = await listTasksByStatus(status.uuid)
+      
+      status.tasks = tasks
+      
+      statusList.push(status)
+    }
     
-    board.status = status
-    board.tasks = tasks
+    board.status = statusList
   
     return board
   } catch (error) {

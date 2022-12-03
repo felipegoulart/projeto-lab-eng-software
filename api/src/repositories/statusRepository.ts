@@ -5,7 +5,7 @@ function list () {
 }
 
 function listStatusByBoard (boardUUID: string) {
-  return database.query('SELECT uuid, name FROM status WHERE board_uuid = $1', [boardUUID])
+  return database.manyOrNone('SELECT uuid, name FROM status WHERE board_uuid = $1', [boardUUID])
 }
 
 function create (name: string, boardUUID: string)  {

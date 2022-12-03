@@ -16,23 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 import { useBoardsStore } from 'stores/boards'
 
-const boardsStore = useBoardsStore()
-const router = useRoute()
-
-onMounted(async () => {
-  await boardsStore.getBoards()
-})
-
 const systemName = 'Kanbam'
+
+const boardsStore = useBoardsStore()
 const pageTitle = computed(() => boardsStore.getBoardByUUID?.name || systemName)
-
-watch(() => router.path, () => {
-  const boardUUID = router.params?.uuid
-  boardsStore.boards.length && boardsStore.setCurrentBoardUUID(boardUUID)
-})
-
 </script>

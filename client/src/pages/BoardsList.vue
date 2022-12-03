@@ -10,6 +10,11 @@
         :columns="columns"
         :filter="filter"
         hide-header
+        hide-no-data
+        :rows-per-page-options="[10]"
+        rows-per-page-label="Quadros por página"
+        :pagination-label="(first, last, total) => `${first}-${last} de ${total}`"
+        :pagination="paginationProps"
         grid
         no-results-label="Nenhum resultado encontrado"
         row-key="name"
@@ -41,26 +46,36 @@
 
       <q-card-actions align="right">
         <q-btn flat color="negative" label="Cancelar" v-close-popup />
-        <q-btn color="primary" label="Criar" :loading="loadingButton" @click="newBoard" />
+        <q-btn color="primary" label="Criar" :loading="loadingButton" @click="createBoard" />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { QInput, QTableProps } from 'quasar'
 import { useRouter } from 'vue-router'
 import { useBoardsStore } from 'stores/boards'
 
-const router = useRouter()
 const boardsStore = useBoardsStore()
+const router = useRouter()
+
+onMounted(async () => {
+  await boardsStore.getBoards()
+})
+
 const loadingButton = ref(false)
 const filter = ref('')
 const showDialog = ref(false)
 const boardName = ref('')
-const boardNameInput = ref(null)
+const boardNameInput = ref<InstanceType<typeof QInput>>()
 
-async function newBoard () {
+const paginationProps = {
+  rowsPerPage: 10
+}
+
+async function createBoard () {
   if (!boardNameInput?.value?.validate()) return
 
   loadingButton.value = true
@@ -76,11 +91,11 @@ async function newBoard () {
   }
 }
 
-function goToBoard (_: any, row: any) {
+function goToBoard (_: Event, row: any) {
   router.push({ name: 'BoardsSingle', params: { uuid: row.uuid } })
 }
 
-const columns = [
+const columns: QTableProps['columns'] = [
   {
     name: 'name',
     required: true,

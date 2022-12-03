@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import boardInteface from 'src/types/boards'
+import ITask from 'src/types/tasks'
 
 export const useBoardsStore = defineStore('boards', {
   state: () => ({
@@ -20,7 +21,7 @@ export const useBoardsStore = defineStore('boards', {
 
     async getSingleBoard (uuid: string): Promise<boardInteface> {
       const { data } = await api.get(`boards/${uuid}`)
-      console.log(data)
+
       return data
     },
 
@@ -40,8 +41,8 @@ export const useBoardsStore = defineStore('boards', {
       await api.post('tasks', { title, description, statusUUID, boardUUID })
     },
 
-    async updateTaskStatus (taskUUID: string, statusUUID: string): Promise<void> {
-      await api.put(`tasks/update-status/${taskUUID}`, { statusUUID })
+    async updateTask ({ uuid, title, description, timeEstimate, statusUUID }: ITask): Promise<void> {
+      await api.put(`tasks/${uuid}`, { title, description, timeEstimate, statusUUID })
     }
 
   }
