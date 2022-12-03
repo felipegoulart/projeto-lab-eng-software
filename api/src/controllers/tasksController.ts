@@ -1,8 +1,9 @@
 import { 
   list,
-  create as createStatus,
-  update as updateStatus,
-  remove as removeStatus
+  create as createTask,
+  update as updateTask,
+  remove as removeTask,
+  updateStatus as updateStatusRepository
 } from 'repositories/tasksRepository'
 import { Request } from 'express'
 
@@ -19,7 +20,7 @@ async function create (req: Request) {
 
   if (!statusUUID) throw new Error('Status is required')
 
-  const result = await createStatus(title, description, boardUUID, statusUUID)
+  const result = await createTask(title, description, boardUUID, statusUUID)
 
   return result
 }
@@ -32,7 +33,20 @@ async function update (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  const result = await updateStatus(uuid, body.name)
+  const result = await updateTask({uuid, ...body})
+
+  return result
+}
+
+async function updateStatus (req: Request) {
+  const {
+    body,
+    params: { uuid }
+  } = req
+
+  if (!uuid) throw new Error('UUID is required')
+
+  const result = await updateStatusRepository(uuid, body.statusUUID)
 
   return result
 }
@@ -42,12 +56,13 @@ function remove (req: Request) {
 
   if (!uuid) throw new Error('UUID is required')
 
-  removeStatus(uuid)
+  removeTask(uuid)
 }
 
 export {
   index,
   create,
   update,
+  updateStatus,
   remove
 }

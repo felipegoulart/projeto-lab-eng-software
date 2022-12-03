@@ -7,7 +7,6 @@ import {
   remove as removeBoards
 } from 'repositories/boardsRepository'
 
-
 async function index () {
   const results = await list()
   return results
@@ -27,6 +26,7 @@ async function show (req: Request) {
   if (!uuid) throw new Error('Uuid is required')
 
   const result = await showBoards(uuid)
+  
   return result
 }
 
